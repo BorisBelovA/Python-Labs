@@ -38,7 +38,7 @@ def display(values):
 #group([1,3,4,5,6,8],3)
 
 def get_row(values, pos):
-
+    #sgkddgg
     return True
 
 grid = read_sudoku('grid.txt')
