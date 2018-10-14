@@ -102,99 +102,45 @@ def find_possible_values(grid, pos):
     values.difference_update(values_block)
     return values
 
-#A function to check if the grid is full
-def checkGrid(grid):
-  for row in range(0,9):
-      for col in range(0,9):
-        if grid[row][col]==0:
-          return False
-
-  #We have a complete grid!
-  return True
 
 def solve(grid):
-    """ Решение пазла, заданного в grid
-
-    Как решать Судоку?
+    """ Решение пазла, заданного в grid """
+    """ Как решать Судоку?
         1. Найти свободную позицию
         2. Найти все возможные значения, которые могут находиться на этой позиции
         3. Для каждого возможного значения:
             3.1. Поместить это значение на эту позицию
             3.2. Продолжить решать оставшуюся часть пазла
-
-    grid = read_sudoku('puzzle1.txt')
-    solve(grid)"""
-    # PUT YOUR CODE HERE
-    #while find_empty_positions(grid)[1] != -1:
-    '''try:
-        empty_pos = find_empty_positions(grid)
-        possible_values = find_possible_values(grid, empty_pos)
-        index = random.randint(0, len(possible_values) - 1)
-        i = 0
-        for elem in possible_values:
-            if (i == index):
-                element = elem
-                break
-            i += 1
-        grid[empty_pos[0]][empty_pos[1]] = str(element)
-        roolback_dict[elem] = (empty_pos)
-        print(roolback_dict)
-    except ValueError:
-        solve(grid)
-    return  grid'''
-    # Find next empty cell
-    for i in range(0, 81):
-        row = i // 9
-        col = i % 9
-        display(grid)
-        print('/////////////////////')
-        if grid[row][col] == 0:
-            for value in range(1, 10):
-                # Check that this value has not already be used on this row
-                if not (value in grid[row]):
-                    # Check that this value has not already be used on this column
-                    if not value in (
-                    grid[0][col], grid[1][col], grid[2][col], grid[3][col], grid[4][col], grid[5][col], grid[6][col],
-                    grid[7][col], grid[8][col]):
-                        # Identify which of the 9 squares we are working on
-                        square = []
-                        if row < 3:
-                            if col < 3:
-                                square = [grid[i][0:3] for i in range(0, 3)]
-                            elif col < 6:
-                                square = [grid[i][3:6] for i in range(0, 3)]
-                            else:
-                                square = [grid[i][6:9] for i in range(0, 3)]
-                        elif row < 6:
-                            if col < 3:
-                                square = [grid[i][0:3] for i in range(3, 6)]
-                            elif col < 6:
-                                square = [grid[i][3:6] for i in range(3, 6)]
-                            else:
-                                square = [grid[i][6:9] for i in range(3, 6)]
-                        else:
-                            if col < 3:
-                                square = [grid[i][0:3] for i in range(6, 9)]
-                            elif col < 6:
-                                square = [grid[i][3:6] for i in range(6, 9)]
-                            else:
-                                square = [grid[i][6:9] for i in range(6, 9)]
-                        # Check that this value has not already be used on this 3x3 square
-                        if not value in (square[0] + square[1] + square[2]):
-                            grid[row][col] = value
-                            if checkGrid(grid):
-                                print("Grid Complete and Checked")
-                                return True
-                            else:
-                                if solve(grid):
-                                    return True
-            break
-    print("Backtrack")
-    grid[row][col] = 0
+    >>> grid = read_sudoku('puzzle1.txt')
+    >>> solve(grid)
+    [['5', '3', '4', '6', '7', '8', '9', '1', '2'], ['6', '7', '2', '1', '9', '5', '3', '4', '8'], ['1', '9', '8', '3', '4', '2', '5', '6', '7'], ['8', '5', '9', '7', '6', '1', '4', '2', '3'], ['4', '2', '6', '8', '5', '3', '7', '9', '1'], ['7', '1', '3', '9', '2', '4', '8', '5', '6'], ['9', '6', '1', '5', '3', '7', '2', '8', '4'], ['2', '8', '7', '4', '1', '9', '6', '3', '5'], ['3', '4', '5', '2', '8', '6', '1', '7', '9']]
+    """
+    pos = find_empty_positions(grid)
+    #print(pos)
+    if not pos:
+        return grid
+    row, col = pos
+    #print(find_possible_values(grid,pos))
+    for value in find_possible_values(grid, pos):
+        grid[row][col] = value
+        solution = solve(grid)
+        #print(solve(grid))
+        if solution:
+            return solution
+    grid[row][col] = '.'
+    return None
 
 
-grid = read_sudoku('grid.txt')
-solve(grid)
+
+
+
+if __name__ == '__main__':
+    grid = read_sudoku('grid.txt')
+    display(grid)
+    solution = solve(grid)
+    display(solution)
+
+#solve(grid)
 
 
 #print(get_row(grid,0))
